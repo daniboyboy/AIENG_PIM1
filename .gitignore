@@ -1,0 +1,9 @@
+# Secretos - nunca subir
+.env
+
+# Entorno virtual - no se sube, se recrea con requirements.txt
+venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
