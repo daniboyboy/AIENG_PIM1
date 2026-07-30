@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -53,6 +54,21 @@ response = client.chat.completions.create(
     temperature=0.3
 )
 
+inicio = time.time()          # ⏱️ arranca el cronómetro
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    response_format={"type": "json_object"},
+    messages=[
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": pregunta_cliente}
+    ],
+    temperature=0.3
+)
+
+fin = time.time()             # ⏱️ para el cronómetro
+latencia = fin - inicio       # la diferencia = cuánto tardó (en segundos)
+
 # --- Extraer y mostrar el resultado ---
 resultado = json.loads(response.choices[0].message.content)
 
@@ -60,3 +76,6 @@ print("--- PREGUNTA DEL CLIENTE ---")
 print(pregunta_cliente)
 print("\n--- RESPUESTA DEL ASISTENTE (JSON) ---")
 print(json.dumps(resultado, indent=2, ensure_ascii=False))
+
+print("\n--- MÉTRICAS ---")
+print(f"Latencia: {latencia:.2f} segundos")
