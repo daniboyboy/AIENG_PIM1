@@ -1,6 +1,8 @@
 import os
 import json
 import time
+import csv
+from datetime import datetime
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -92,3 +94,22 @@ print("\n--- MÉTRICAS ---")
 print(f"Latencia: {latencia:.2f} segundos")
 print(f"Tokens (entrada/salida/total): {tokens_entrada} / {tokens_salida} / {tokens_total}")
 print(f"Costo estimado: ${costo:.6f} USD")
+
+# --- Guardar métricas en archivo CSV ---
+archivo_metricas = "metrics.csv"
+existe = os.path.exists(archivo_metricas)
+
+with open(archivo_metricas, "a", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    if not existe:
+        writer.writerow(["timestamp", "latencia_seg", "tokens_entrada", "tokens_salida", "tokens_total", "costo_usd"])
+    writer.writerow([
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        f"{latencia:.2f}",
+        tokens_entrada,
+        tokens_salida,
+        tokens_total,
+        f"{costo:.6f}"
+    ])
+
+print(f"\nMétricas guardadas en {archivo_metricas}")
