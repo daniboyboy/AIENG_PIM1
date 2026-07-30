@@ -69,6 +69,17 @@ response = client.chat.completions.create(
 fin = time.time()             # ⏱️ para el cronómetro
 latencia = fin - inicio       # la diferencia = cuánto tardó (en segundos)
 
+# --- Tokens ---
+tokens_entrada = response.usage.prompt_tokens
+tokens_salida = response.usage.completion_tokens
+tokens_total = response.usage.total_tokens
+
+# --- Costo estimado en USD ---
+# Precios de gpt-4o-mini por millón de tokens (verificar en OpenAI)
+precio_entrada = 0.15 / 1_000_000
+precio_salida = 0.60 / 1_000_000
+costo = (tokens_entrada * precio_entrada) + (tokens_salida * precio_salida)
+
 # --- Extraer y mostrar el resultado ---
 resultado = json.loads(response.choices[0].message.content)
 
@@ -79,3 +90,5 @@ print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 print("\n--- MÉTRICAS ---")
 print(f"Latencia: {latencia:.2f} segundos")
+print(f"Tokens (entrada/salida/total): {tokens_entrada} / {tokens_salida} / {tokens_total}")
+print(f"Costo estimado: ${costo:.6f} USD")
